@@ -7,6 +7,8 @@ from random import randint, random
 from math import e,sin,pi,cos
 
 WINSIZE = 1280,720
+DEFACC = 0.025
+FORCE = 0.025
 
 class Rocket:
     def __init__(self):
@@ -18,7 +20,7 @@ class Rocket:
         temp = Vector2(x, y)
         acc = temp - self.pos
         acc = acc.normalize()
-        acc *= 0.05
+        acc *= FORCE
         self.vel += acc
         if self.vel.length() > 5:
             self.vel = self.vel.normalize()
@@ -52,6 +54,8 @@ def colorFade(x, rgb):
     return int(x)
 
 def main():
+    global FORCE
+    global DEFACC
     pygame.init()
     scr_inf = pygame.display.Info()
     os.environ['SDL_VIDEO_WINDOW_POS'] = '{}, {}'.format(scr_inf.current_w // 2 - WINSIZE[0] // 2,
@@ -74,6 +78,14 @@ def main():
     rev = False
     X = 0
     while not done:
+
+        if pygame.mouse.get_pressed()[0] :
+            FORCE += 0.01
+        elif pygame.mouse.get_pressed()[2] :
+            FORCE -= 0.01
+        elif pygame.mouse.get_pressed()[1]:
+            FORCE = DEFACC
+
         fade(screen)
         c1 = colorFade(X,"r")
         c3 = colorFade(X,"b")
